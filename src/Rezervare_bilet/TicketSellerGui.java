@@ -1,7 +1,5 @@
 package Rezervare_bilet;
 
-
-
 import java.awt.BorderLayout;
 import java.awt.Dimension;
 import java.awt.GridBagConstraints;
@@ -25,95 +23,96 @@ import javax.swing.JTable;
 import javax.swing.JTextField;
 import javax.swing.table.AbstractTableModel;
 
-class TicketSellerGui extends JFrame {	
+class TicketSellerGui extends JFrame {
 	private static final long serialVersionUID = 1L;
-	
-	private TicketSellerAgent myAgent;	
-	private JTextField departureField, arrivalField, dateField, timeDepartureField, timeArrivalField, seatsField, priceField;
+
+	private TicketSellerAgent myAgent;
+	private JTextField departureField, arrivalField, dateField, timeDepartureField, timeArrivalField, seatsField,
+			priceField;
 	private FlightTableModel flightTableModel;
-	
+
 	TicketSellerGui(TicketSellerAgent a) {
 		super(a.getLocalName());
-		
+
 		myAgent = a;
-		
+
 		JPanel jPanel = new JPanel(new GridBagLayout());
 		GridBagConstraints gbc = new GridBagConstraints();
 		gbc.anchor = GridBagConstraints.CENTER;
 		gbc.fill = GridBagConstraints.HORIZONTAL;
 		gbc.weightx = 0.5;
 		gbc.weighty = 0.5;
-		
+
 		gbc.gridx = 0;
 		gbc.gridy = 0;
 		jPanel.add(new JLabel("Departure:"), gbc);
-		
+
 		gbc.gridx = 1;
 		gbc.gridy = 0;
 		departureField = new JTextField(15);
 		jPanel.add(departureField, gbc);
-		
+
 		gbc.gridx = 0;
 		gbc.gridy = 1;
 		jPanel.add(new JLabel("Arrival:"), gbc);
-		
+
 		gbc.gridx = 1;
 		gbc.gridy = 1;
 		arrivalField = new JTextField(15);
 		jPanel.add(arrivalField, gbc);
-		
+
 		gbc.gridx = 0;
 		gbc.gridy = 2;
 		jPanel.add(new JLabel("Date:"), gbc);
-		
+
 		gbc.gridx = 1;
 		gbc.gridy = 2;
 		dateField = new JTextField(15);
 		jPanel.add(dateField, gbc);
-		
+
 		gbc.gridx = 0;
 		gbc.gridy = 3;
 		jPanel.add(new JLabel("Time departure:"), gbc);
-		
+
 		gbc.gridx = 1;
 		gbc.gridy = 3;
 		timeDepartureField = new JTextField(15);
 		jPanel.add(timeDepartureField, gbc);
-		
+
 		gbc.gridx = 0;
 		gbc.gridy = 4;
 		jPanel.add(new JLabel("Time arrival:"), gbc);
-		
+
 		gbc.gridx = 1;
 		gbc.gridy = 4;
 		timeArrivalField = new JTextField(15);
 		jPanel.add(timeArrivalField, gbc);
-		
+
 		gbc.gridx = 0;
 		gbc.gridy = 5;
 		jPanel.add(new JLabel("Seats:"), gbc);
-		
+
 		gbc.gridx = 1;
 		gbc.gridy = 5;
 		seatsField = new JTextField(15);
 		jPanel.add(seatsField, gbc);
-		
+
 		gbc.gridx = 0;
 		gbc.gridy = 6;
 		jPanel.add(new JLabel("Price:"), gbc);
-		
+
 		gbc.gridx = 1;
 		gbc.gridy = 6;
 		priceField = new JTextField(15);
 		jPanel.add(priceField, gbc);
-		
+
 		gbc.gridx = 0;
 		gbc.gridy = 7;
 		gbc.gridwidth = 2;
 		gbc.fill = GridBagConstraints.NONE;
 		gbc.insets = new Insets(0, 0, 10, 0);
 		JButton addButton = new JButton("Add");
-		addButton.addActionListener( new ActionListener() {
+		addButton.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent ev) {
 				try {
 					String departure = departureField.getText().trim();
@@ -123,7 +122,7 @@ class TicketSellerGui extends JFrame {
 					String timeArrival = timeArrivalField.getText().trim();
 					String seats = seatsField.getText().trim();
 					String price = priceField.getText().trim();
-					
+
 					departureField.setText("");
 					arrivalField.setText("");
 					dateField.setText("");
@@ -131,17 +130,19 @@ class TicketSellerGui extends JFrame {
 					timeArrivalField.setText("");
 					seatsField.setText("");
 					priceField.setText("");
-					
-					myAgent.addFlight(new Flight(departure,arrival,date,timeDeparture, timeArrival, Integer.parseInt(price), Integer.parseInt(seats)));
-					flightTableModel.addFlight(new Flight(departure,arrival,date, timeDeparture, timeArrival,Integer.parseInt(price), Integer.parseInt(seats)));
-				}
-				catch (Exception e) {
-					JOptionPane.showMessageDialog(TicketSellerGui.this, "Invalid values. "+e.getMessage(), "Error", JOptionPane.ERROR_MESSAGE); 
+
+					myAgent.addFlight(new Flight(departure, arrival, date, timeDeparture, timeArrival,
+							Integer.parseInt(price), Integer.parseInt(seats)));
+					flightTableModel.addFlight(new Flight(departure, arrival, date, timeDeparture, timeArrival,
+							Integer.parseInt(price), Integer.parseInt(seats)));
+				} catch (Exception e) {
+					JOptionPane.showMessageDialog(TicketSellerGui.this, "Invalid values. " + e.getMessage(), "Error",
+							JOptionPane.ERROR_MESSAGE);
 				}
 			}
-		} );
+		});
 		jPanel.add(addButton, gbc);
-		
+
 		gbc.gridx = 0;
 		gbc.gridy = 8;
 		gbc.gridwidth = 2;
@@ -150,35 +151,35 @@ class TicketSellerGui extends JFrame {
 		flightTableModel = new FlightTableModel();
 		JTable jTable = new JTable(flightTableModel);
 		jTable.getTableHeader().setReorderingAllowed(false);
-		jTable.getTableHeader().setResizingAllowed(false);		
+		jTable.getTableHeader().setResizingAllowed(false);
 
 		JScrollPane jScrollPane = new JScrollPane(jTable);
 		Dimension preferredSize = new Dimension();
 		preferredSize.setSize(900, 100);
 		jScrollPane.setPreferredSize(preferredSize);
 		jPanel.add(jScrollPane, gbc);
-		
+
 		getContentPane().add(jPanel, BorderLayout.CENTER);
-		
-		addWindowListener(new	WindowAdapter() {
+
+		addWindowListener(new WindowAdapter() {
 			public void windowClosing(WindowEvent e) {
 				myAgent.doDelete();
 			}
-		} );
-		
+		});
+
 		setResizable(true);
 	}
-	
+
 	@SuppressWarnings("deprecation")
 	public void show() {
 		pack();
 		Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
-		int centerX = (int)screenSize.getWidth() / 2;
-		int centerY = (int)screenSize.getHeight() / 2;
+		int centerX = (int) screenSize.getWidth() / 2;
+		int centerY = (int) screenSize.getHeight() / 2;
 		setLocation(centerX - getWidth() / 2, centerY - getHeight() / 2);
 		super.show();
-	}	
-	
+	}
+
 	public void addFlight(final Flight flight) {
 		java.awt.EventQueue.invokeLater(new Runnable() {
 			@Override
@@ -187,29 +188,30 @@ class TicketSellerGui extends JFrame {
 			}
 		});
 	}
-	
-	public void incrementSalesAndDecreaseSeatsForFlight(final String departure, final String arrival, final String date) {
+
+	public void incrementSalesAndDecreaseSeatsForFlight(final String departure, final String arrival,
+			final String date) {
 		java.awt.EventQueue.invokeLater(new Runnable() {
 			@Override
 			public void run() {
-				flightTableModel.incrementSalesAndDecreaseSeatsForFlight(departure,arrival,date);
+				flightTableModel.incrementSalesAndDecreaseSeatsForFlight(departure, arrival, date);
 			}
 		});
 	}
-	
+
 	public void incrementRefusalsForFlight(final String departure, final String arrival, final String date) {
 		java.awt.EventQueue.invokeLater(new Runnable() {
 			@Override
 			public void run() {
-				flightTableModel.incrementRefusalsForFlight(departure,arrival,date);
+				flightTableModel.incrementRefusalsForFlight(departure, arrival, date);
 			}
 		});
 	}
-	
+
 	private static class FlightTableModel extends AbstractTableModel {
 		private static final long serialVersionUID = 1L;
-		public static final String[] COLUMN_NAMES = {"No", "Departure", 
-			"Arrival", "Date", "Time departure", "Time arrival", "Seats", "Price", "Sales", "Refusal"};
+		public static final String[] COLUMN_NAMES = { "No", "Departure", "Arrival", "Date", "Time departure",
+				"Time arrival", "Seats", "Price", "Sales", "Refusal" };
 		public static final int COLUMN_COUNT = COLUMN_NAMES.length;
 		public static final int NR_COLUMN = 0;
 		public static final int DEPARTURE_COLUMN = 1;
@@ -221,9 +223,9 @@ class TicketSellerGui extends JFrame {
 		public static final int PRICE_COLUMN = 7;
 		public static final int SALES_COLUMN = 8;
 		public static final int REFUSALS_COLUMN = 9;
-		
+
 		private List<Flight> flights = new ArrayList();
-		
+
 		@Override
 		public String getColumnName(int col) {
 			return COLUMN_NAMES[col];
@@ -248,9 +250,9 @@ class TicketSellerGui extends JFrame {
 			case DEPARTURE_COLUMN:
 				return flight.getDeparture();
 			case ARRIVAL_COLUMN:
-				return flight.getArrival();	
+				return flight.getArrival();
 			case DATE_COLUMN:
-				return flight.getDate();	
+				return flight.getDate();
 			case TIMED_COLUMN:
 				return flight.getTimeDeparture();
 			case TIMEA_COLUMN:
@@ -258,7 +260,7 @@ class TicketSellerGui extends JFrame {
 			case SEATS_COLUMN:
 				return flight.getNrSeats();
 			case PRICE_COLUMN:
-				return flight.getPrice();			
+				return flight.getPrice();
 			case SALES_COLUMN:
 				return flight.getSales();
 			case REFUSALS_COLUMN:
@@ -266,20 +268,21 @@ class TicketSellerGui extends JFrame {
 			}
 			return null;
 		}
-		
+
 		public void addFlight(Flight flight) {
 			flights.add(flight);
 			fireTableDataChanged();
 		}
-		
-		public void incrementSalesAndDecreaseSeatsForFlight(final String departure, final String arrival, final String date) {
+
+		public void incrementSalesAndDecreaseSeatsForFlight(final String departure, final String arrival,
+				final String date) {
 			Flight flight = Flight.findFlight(flights, departure, arrival, date);
 			if (flight != null) {
 				flight.incrementSalesAndDecreaseSeats();
 				fireTableDataChanged();
 			}
 		}
-		
+
 		public void incrementRefusalsForFlight(final String departure, final String arrival, final String date) {
 			Flight flight = Flight.findFlight(flights, departure, arrival, date);
 			if (flight != null) {
@@ -289,4 +292,3 @@ class TicketSellerGui extends JFrame {
 		}
 	}
 }
-

@@ -1,7 +1,5 @@
 package Rezervare_bilet;
 
-
-
 import java.awt.BorderLayout;
 import java.awt.Dimension;
 import java.awt.FlowLayout;
@@ -34,37 +32,34 @@ public class TicketBuyerGui extends JFrame {
 	private List<Integer> sellerPrices = new ArrayList();
 	private List<JCheckBox> sellerJCheckBoxes = new ArrayList();
 	private List<JLabel> sellerJLabels = new ArrayList();
-	
+
 	private JPanel jPanelProposals;
 	private JButton jButtonSearch;
 	private JButton jButtonBuy;
-	
+
 	TicketBuyerGui(TicketBuyerAgent agent) {
 		super(agent.getLocalName());
-		
+
 		myAgent = agent;
-		
+
 		JPanel jPanel = new JPanel(new GridBagLayout());
 		final JTextField departureField = new JTextField(20);
 		final JTextField arrivalField = new JTextField(20);
 		final JTextField dateField = new JTextField(20);
-		
-		jPanel.add(new JLabel("Departure:"));	
+
+		jPanel.add(new JLabel("Departure:"));
 		jPanel.add(departureField);
-		
-		
-		jPanel.add(new JLabel("Arrival:"));		
+
+		jPanel.add(new JLabel("Arrival:"));
 		jPanel.add(arrivalField);
-		
-		
+
 		jPanel.add(new JLabel("Date:"));
 		jPanel.add(dateField);
-		
-		/*gbc.gridx = 0;
-		gbc.gridy = 3;
-		gbc.gridwidth = 2;
-		gbc.fill = GridBagConstraints.NONE;
-		gbc.insets = new Insets(0, 0, 10, 0);*/
+
+		/*
+		 * gbc.gridx = 0; gbc.gridy = 3; gbc.gridwidth = 2; gbc.fill =
+		 * GridBagConstraints.NONE; gbc.insets = new Insets(0, 0, 10, 0);
+		 */
 		jButtonSearch = new JButton("Search");
 		jButtonSearch.addActionListener(new ActionListener() {
 			@Override
@@ -77,16 +72,15 @@ public class TicketBuyerGui extends JFrame {
 				sellerJCheckBoxes.clear();
 				sellerJLabels.clear();
 				pack();
-				myAgent.startCFP(departureField.getText(),arrivalField.getText(),dateField.getText());
-			}	
+				myAgent.startCFP(departureField.getText(), arrivalField.getText(), dateField.getText());
+			}
 		});
 		jPanel.add(jButtonSearch);
-		
-		/*gbc.gridx = 0;
-		gbc.gridy = 4;
-		gbc.gridwidth = 2;
-		gbc.fill = GridBagConstraints.HORIZONTAL;
-		gbc.insets = new Insets(0, 0, 0, 0);*/
+
+		/*
+		 * gbc.gridx = 0; gbc.gridy = 4; gbc.gridwidth = 2; gbc.fill =
+		 * GridBagConstraints.HORIZONTAL; gbc.insets = new Insets(0, 0, 0, 0);
+		 */
 		jButtonBuy = new JButton("Buy");
 		jButtonBuy.addActionListener(new ActionListener() {
 			@Override
@@ -94,8 +88,7 @@ public class TicketBuyerGui extends JFrame {
 				jButtonBuy.setEnabled(false);
 				Map<String, Boolean> accepted = new HashMap();
 				for (int i = 0; i < sellerNames.size(); ++i) {
-					accepted.put(sellerNames.get(i), 
-							sellerJCheckBoxes.get(i).isSelected());
+					accepted.put(sellerNames.get(i), sellerJCheckBoxes.get(i).isSelected());
 				}
 				myAgent.finish(accepted);
 			}
@@ -103,37 +96,37 @@ public class TicketBuyerGui extends JFrame {
 		jButtonBuy.setEnabled(false);
 		jPanel.add(jButtonBuy);
 		getContentPane().add(jPanel, BorderLayout.NORTH);
-		
+
 		jPanelProposals = new JPanel(new GridLayout(0, 4));
 		initProposals();
 		getContentPane().add(jPanelProposals, BorderLayout.CENTER);
-		
-		addWindowListener(new	WindowAdapter() {
+
+		addWindowListener(new WindowAdapter() {
 			public void windowClosing(WindowEvent e) {
 				myAgent.doDelete();
 			}
-		} );
-		
+		});
+
 		setResizable(false);
 	}
-	
+
 	@SuppressWarnings("deprecation")
 	public void show() {
 		pack();
 		Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
-		int centerX = (int)screenSize.getWidth() / 2;
-		int centerY = (int)screenSize.getHeight() / 2;
+		int centerX = (int) screenSize.getWidth() / 2;
+		int centerY = (int) screenSize.getHeight() / 2;
 		setLocation(centerX - getWidth() / 2, centerY - getHeight() / 2);
 		super.show();
-	}	
-	
+	}
+
 	private void initProposals() {
 		jPanelProposals.add(new JLabel("Seller Name"));
 		jPanelProposals.add(new JLabel("Seller Price"));
 		jPanelProposals.add(new JLabel("Buy?"));
 		jPanelProposals.add(new JLabel("Result Info"));
 	}
-	
+
 	public void addProposal(final String name, final int price) {
 		java.awt.EventQueue.invokeLater(new Runnable() {
 			@Override
@@ -152,7 +145,7 @@ public class TicketBuyerGui extends JFrame {
 			}
 		});
 	}
-	
+
 	public void endProposals() {
 		java.awt.EventQueue.invokeLater(new Runnable() {
 			@Override
@@ -161,7 +154,7 @@ public class TicketBuyerGui extends JFrame {
 			}
 		});
 	}
-	
+
 	public void endResults() {
 		java.awt.EventQueue.invokeLater(new Runnable() {
 			@Override
@@ -171,7 +164,7 @@ public class TicketBuyerGui extends JFrame {
 			}
 		});
 	}
-	
+
 	public void receiveResult(final String name, final String info) {
 		java.awt.EventQueue.invokeLater(new Runnable() {
 			@Override
