@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<classpath>
+	<classpathentry kind="src" path="src"/>
+	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER"/>
+	<classpathentry kind="lib" path="C:/Users/alexa/eclipse/java-neon/eclipse/plugins/it.fbk.sra.ejade_0.8.0/lib/libjade/http.jar"/>
+	<classpathentry kind="lib" path="C:/Users/alexa/eclipse/java-neon/eclipse/plugins/it.fbk.sra.ejade_0.8.0/lib/libjade/iiop.jar"/>
+	<classpathentry kind="lib" path="C:/Users/alexa/eclipse/java-neon/eclipse/plugins/it.fbk.sra.ejade_0.8.0/lib/libjade/jade.jar"/>
+	<classpathentry kind="lib" path="C:/Users/alexa/eclipse/java-neon/eclipse/plugins/it.fbk.sra.ejade_0.8.0/lib/libjade/jadeTools.jar"/>
+	<classpathentry kind="output" path="bin"/>
+</classpath>
