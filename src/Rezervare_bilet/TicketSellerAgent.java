@@ -19,9 +19,7 @@ import java.util.concurrent.atomic.AtomicInteger;
 
 public class TicketSellerAgent extends Agent {
 	private static final long serialVersionUID = 1L;
-	// private static final int DISCOUNT_THRESHOLD = 3;
-	// private static final float DISCOUNT_RATIO = 0.7f;
-
+	
 	private List<Flight> flights;
 	private Map<AID, AtomicInteger> clients;
 	private TicketSellerGui myGui;
@@ -90,13 +88,7 @@ public class TicketSellerAgent extends Agent {
 
 				if (flight != null) {
 					reply.setPerformative(ACLMessage.PROPOSE);
-					// AtomicInteger client = clients.get(msg.getSender());
-					// int purchaseNr = (client == null ? 1 : client.get() + 1);
 					int price = flight.getPrice();
-					/*
-					 * if (purchaseNr % DISCOUNT_THRESHOLD == 0) price =
-					 * (int)((float)price * DISCOUNT_RATIO);
-					 */
 					reply.setContent(String.valueOf(price));
 				} else {
 					reply.setPerformative(ACLMessage.REFUSE);

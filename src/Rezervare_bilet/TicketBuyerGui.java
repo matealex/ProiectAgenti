@@ -60,10 +60,6 @@ public class TicketBuyerGui extends JFrame {
 		jPanel.add(new JLabel("Date To (int):"));
 		jPanel.add(dateToField);
 
-		/*
-		 * gbc.gridx = 0; gbc.gridy = 3; gbc.gridwidth = 2; gbc.fill =
-		 * GridBagConstraints.NONE; gbc.insets = new Insets(0, 0, 10, 0);
-		 */
 		jButtonSearch = new JButton("Search");
 		jButtonSearch.addActionListener(new ActionListener() {
 			@Override
@@ -81,10 +77,6 @@ public class TicketBuyerGui extends JFrame {
 		});
 		jPanel.add(jButtonSearch);
 
-		/*
-		 * gbc.gridx = 0; gbc.gridy = 4; gbc.gridwidth = 2; gbc.fill =
-		 * GridBagConstraints.HORIZONTAL; gbc.insets = new Insets(0, 0, 0, 0);
-		 */
 		jButtonBuy = new JButton("Buy");
 		jButtonBuy.addActionListener(new ActionListener() {
 			@Override
