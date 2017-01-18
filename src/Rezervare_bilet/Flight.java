@@ -8,7 +8,7 @@ import java.util.Date;
 import java.util.Locale;
 
 public class Flight {
-	
+
 	private String departure;
 	private String arrival;
 	private String fromDate;
@@ -20,8 +20,8 @@ public class Flight {
 	private int sales;
 	private int refusals;
 
-	public Flight(String departure, String arrival, String fromDate, String toDate, String timeDeparture, String timeArrival, int price,
-			int nrSeats) {
+	public Flight(String departure, String arrival, String fromDate, String toDate, String timeDeparture,
+			String timeArrival, int price, int nrSeats) {
 		this.departure = departure;
 		this.arrival = arrival;
 		this.timeDeparture = timeDeparture;
@@ -41,11 +41,11 @@ public class Flight {
 	public String getArrival() {
 		return arrival;
 	}
-	
+
 	public String getFromDate() {
 		return fromDate;
 	}
-	
+
 	public String getToDate() {
 		return toDate;
 	}
@@ -83,18 +83,19 @@ public class Flight {
 		refusals++;
 	}
 
-	public static Flight findFlight(Collection<Flight> flights, String departure, String arrival, String fromDate, String toDate) {
+	public static Flight findFlight(Collection<Flight> flights, String departure, String arrival, String fromDate,
+			String toDate) {
 		System.out.println(fromDate + "->" + toDate);
 		for (Flight flight : flights)
 			if (flight.nrSeats > 0) {
 				if (flight.departure.equals(departure))
-					if (flight.arrival.equals(arrival)) {						
+					if (flight.arrival.equals(arrival)) {
 						int from = Integer.parseInt(fromDate) - 3;
 						int to = Integer.parseInt(toDate) + 3;
 						int flightFrom = Integer.parseInt(flight.fromDate);
 						int flightTo = Integer.parseInt(flight.toDate);
-						
-						if (from <= flightFrom && to >= flightTo) {
+
+						if (flightFrom <= from && to <= flightTo) {
 							return flight;
 						}
 					}
