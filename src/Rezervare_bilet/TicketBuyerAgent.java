@@ -25,6 +25,9 @@ public class TicketBuyerAgent extends Agent {
 	private String targetFromDate;
 	private String targetToDate;
 
+	private int nrStele;
+	private int nrPersoaneCamera;
+
 	private AID[] ticketSellerAgents;
 	private AID[] hotelSelletAgents;
 
@@ -61,7 +64,7 @@ public class TicketBuyerAgent extends Agent {
 
 	// click on search => CFP = call for proposal - cererea de oferte
 	public void startCFP(final String searchDeparture, final String searchArrival, final String searchFromDate,
-			final String searchToDate) {
+			final String searchToDate, final String numarStele, final String numarPersoaneCamera) {
 		addBehaviour(new OneShotBehaviour() {
 			private static final long serialVersionUID = 1L;
 
@@ -71,6 +74,10 @@ public class TicketBuyerAgent extends Agent {
 				targetArrival = searchArrival;
 				targetFromDate = searchFromDate;
 				targetToDate = searchToDate;
+
+				nrStele = Integer.parseInt(numarStele);
+				nrPersoaneCamera = Integer.parseInt(numarPersoaneCamera);
+
 				accepted = new HashMap();
 				proposals = new ArrayList();
 				proposalsHotels = new ArrayList();
@@ -129,10 +136,9 @@ public class TicketBuyerAgent extends Agent {
 		private int countResults = 0;
 
 		public void action() {
-			String searchAll = targetDeparture + ":" + targetArrival + ":" + targetFromDate + ":" + targetToDate;
+			String searchAllFlights = targetDeparture + ":" + targetArrival + ":" + targetFromDate + ":" + targetToDate;
+			String searchAllHotels = nrStele + ":" + nrPersoaneCamera;
 
-			int nrStele = 10;
-			int nrPersoaneCamera = 10;
 			switch (step) {
 			// cere ofertele de la toti seller agents (companii)
 			case 0:
@@ -140,7 +146,7 @@ public class TicketBuyerAgent extends Agent {
 				for (int i = 0; i < ticketSellerAgents.length; ++i) {
 					cfp.addReceiver(ticketSellerAgents[i]);
 				}
-				cfp.setContent(searchAll);
+				cfp.setContent(searchAllFlights);
 				cfp.setConversationId("Ticket-trade");
 				cfp.setReplyWith("cfp" + System.currentTimeMillis()); // Unique
 																		// value
@@ -152,10 +158,10 @@ public class TicketBuyerAgent extends Agent {
 				for (int i = 0; i < hotelSelletAgents.length; ++i) {
 					cfp.addReceiver(hotelSelletAgents[i]);
 				}
-				cfp.setContent(nrStele + ":" + nrPersoaneCamera);
+				cfp.setContent(searchAllHotels);
 				cfp.setConversationId("Hotel-trade");
-				cfp.setReplyWith("cfp" + System.currentTimeMillis()/10); // Unique
-																		// value
+				cfp.setReplyWith("cfp" + System.currentTimeMillis() / 10); // Unique
+																			// value
 				myAgent.send(cfp);
 				mtHotels = MessageTemplate.and(MessageTemplate.MatchConversationId("Hotel-trade"),
 						MessageTemplate.MatchInReplyTo(cfp.getReplyWith()));
@@ -171,7 +177,7 @@ public class TicketBuyerAgent extends Agent {
 					// TODO Auto-generated catch block
 					e.printStackTrace();
 				}
-				
+
 				ACLMessage reply = myAgent.receive(mt);
 				ACLMessage replyHotels = myAgent.receive(mtHotels);
 
@@ -235,8 +241,8 @@ public class TicketBuyerAgent extends Agent {
 						rej = true;
 					}
 				}
-				order_accept.setContent(searchAll);
-				order_reject.setContent(searchAll);
+				order_accept.setContent(searchAllFlights);
+				order_reject.setContent(searchAllFlights);
 				order_accept.setConversationId("Ticket-trade");
 				order_reject.setConversationId("Ticket-trade");
 				order_accept.setReplyWith("order" + System.currentTimeMillis());

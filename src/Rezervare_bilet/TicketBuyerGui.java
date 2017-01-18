@@ -48,6 +48,9 @@ public class TicketBuyerGui extends JFrame {
 		final JTextField dateFromField = new JTextField(20);
 		final JTextField dateToField = new JTextField(20);
 
+		final JTextField numarSteleField = new JTextField(20);
+		final JTextField numarPersoaneField = new JTextField(20);
+
 		jPanel.add(new JLabel("Departure:"));
 		jPanel.add(departureField);
 
@@ -56,9 +59,15 @@ public class TicketBuyerGui extends JFrame {
 
 		jPanel.add(new JLabel("Date From (int):"));
 		jPanel.add(dateFromField);
-		
+
 		jPanel.add(new JLabel("Date To (int):"));
 		jPanel.add(dateToField);
+
+		jPanel.add(new JLabel("Hotel Stele"));
+		jPanel.add(numarSteleField);
+
+		jPanel.add(new JLabel("NR persoane in camera"));
+		jPanel.add(numarPersoaneField);
 
 		jButtonSearch = new JButton("Search");
 		jButtonSearch.addActionListener(new ActionListener() {
@@ -72,7 +81,8 @@ public class TicketBuyerGui extends JFrame {
 				sellerJCheckBoxes.clear();
 				sellerJLabels.clear();
 				pack();
-				myAgent.startCFP(departureField.getText(), arrivalField.getText(), dateFromField.getText(), dateToField.getText());
+				myAgent.startCFP(departureField.getText(), arrivalField.getText(), dateFromField.getText(),
+						dateToField.getText(), numarSteleField.getText(), numarPersoaneField.getText());
 			}
 		});
 		jPanel.add(jButtonSearch);
@@ -191,6 +201,6 @@ public class TicketBuyerGui extends JFrame {
 				pack();
 			}
 		});
-		
+
 	}
 }
