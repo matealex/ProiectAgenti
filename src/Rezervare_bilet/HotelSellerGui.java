@@ -159,6 +159,7 @@ class HotelSellerGui extends JFrame {
 			@Override
 			public void run() {
 				hotelTableModel.buyRoomAtHotel(numeHotel);
+				repaint();
 			}
 		});
 	}
@@ -168,6 +169,7 @@ class HotelSellerGui extends JFrame {
 			@Override
 			public void run() {
 				hotelTableModel.refuseRoomAtHotel(numeHotel);
+				repaint();
 			}
 		});
 	}

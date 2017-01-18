@@ -250,19 +250,64 @@ public class TicketBuyerAgent extends Agent {
 				if (rej) {
 					myAgent.send(order_reject);
 				}
+				if (acc){
+					myAgent.send(order_accept);
+				}
+//				else {
+//					step = 4;
+//					return;
+//				}
+				mt = MessageTemplate.and(MessageTemplate.MatchConversationId("Ticket-trade"),
+						MessageTemplate.MatchInReplyTo(order_accept.getReplyWith()));
+				
+				/////
+				
+				order_accept = new ACLMessage(ACLMessage.ACCEPT_PROPOSAL);
+				order_reject = new ACLMessage(ACLMessage.REJECT_PROPOSAL);
+				for (AID aid : proposals) {
+					if (accepted.get(aid.getLocalName())) {
+						order_accept.addReceiver(aid);
+						acc = true;
+						accCount++;
+						System.out.println("Accepted Count: " + accCount);
+					} else {
+						order_reject.addReceiver(aid);
+						rej = true;
+					}
+				}
+				
+				order_accept.setContent(searchAllHotels);
+				order_reject.setContent(searchAllHotels);
+				order_accept.setConversationId("Hotel-trade");
+				order_reject.setConversationId("Hotel-trade");
+				order_accept.setReplyWith("order" + System.currentTimeMillis());
+				order_reject.setReplyWith("order" + System.currentTimeMillis());
+				
+				mtHotels = MessageTemplate.and(MessageTemplate.MatchConversationId("Hotel-trade"),
+						MessageTemplate.MatchInReplyTo(order_accept.getReplyWith()));
+				if (rej) {
+					myAgent.send(order_reject);
+				}
 				if (acc)
 					myAgent.send(order_accept);
 				else {
 					step = 4;
 					return;
 				}
-				mt = MessageTemplate.and(MessageTemplate.MatchConversationId("Ticket-trade"),
-						MessageTemplate.MatchInReplyTo(order_accept.getReplyWith()));
 				step = 3;
+				
 				break;
 			// se primeste informatie de la seller daca s-a cumparat cu succes
 			// sau nu
 			case 3:
+				
+				try {
+					Thread.sleep(500);
+				} catch (InterruptedException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
+				
 				reply = myAgent.receive(mt);
 				if (reply != null) {
 					if (reply.getPerformative() == ACLMessage.INFORM) {

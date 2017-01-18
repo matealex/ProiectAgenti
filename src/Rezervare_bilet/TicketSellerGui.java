@@ -206,6 +206,7 @@ class TicketSellerGui extends JFrame {
 			@Override
 			public void run() {
 				flightTableModel.incrementSalesAndDecreaseSeatsForFlight(departure, arrival, fromDate, toDate);
+				repaint();
 			}
 		});
 	}
@@ -215,6 +216,7 @@ class TicketSellerGui extends JFrame {
 			@Override
 			public void run() {
 				flightTableModel.incrementRefusalsForFlight(departure, arrival, fromDate, toDate);
+				repaint();
 			}
 		});
 	}

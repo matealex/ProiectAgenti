@@ -68,7 +68,7 @@ public class HotelSellerAgent extends Agent {
 		});
 	}
 
-	// oferta de zboruri in functie de cautarea clientului => propunere sau
+	// oferta de hoteluri in functie de cautarea clientului => propunere sau
 	// refuzare
 	private class OfferRequestsServer extends CyclicBehaviour {
 		private static final long serialVersionUID = 1L;
