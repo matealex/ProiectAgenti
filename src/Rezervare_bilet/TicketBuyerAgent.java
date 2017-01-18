@@ -154,7 +154,7 @@ public class TicketBuyerAgent extends Agent {
 				}
 				cfp.setContent(nrStele + ":" + nrPersoaneCamera);
 				cfp.setConversationId("Hotel-trade");
-				cfp.setReplyWith("cfp" + System.currentTimeMillis()); // Unique
+				cfp.setReplyWith("cfp" + System.currentTimeMillis()/10); // Unique
 																		// value
 				myAgent.send(cfp);
 				mtHotels = MessageTemplate.and(MessageTemplate.MatchConversationId("Hotel-trade"),
