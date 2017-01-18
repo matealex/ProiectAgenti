@@ -165,6 +165,13 @@ public class TicketBuyerAgent extends Agent {
 				break;
 			// se primesc ofertele companiilor (cele care propun oferte)
 			case 1:
+				try {
+					Thread.sleep(500);
+				} catch (InterruptedException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
+				
 				ACLMessage reply = myAgent.receive(mt);
 				ACLMessage replyHotels = myAgent.receive(mtHotels);
 
