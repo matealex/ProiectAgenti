@@ -27,7 +27,7 @@ class TicketSellerGui extends JFrame {
 	private static final long serialVersionUID = 1L;
 
 	private TicketSellerAgent myAgent;
-	private JTextField departureField, arrivalField, dateField, timeDepartureField, timeArrivalField, seatsField,
+	private JTextField departureField, arrivalField, dateFromField, dateToField, timeDepartureField, timeArrivalField, seatsField,
 			priceField;
 	private FlightTableModel flightTableModel;
 
@@ -63,12 +63,21 @@ class TicketSellerGui extends JFrame {
 
 		gbc.gridx = 0;
 		gbc.gridy = 2;
-		jPanel.add(new JLabel("Date:"), gbc);
+		jPanel.add(new JLabel("From Date (int):"), gbc);
 
 		gbc.gridx = 1;
 		gbc.gridy = 2;
-		dateField = new JTextField(15);
-		jPanel.add(dateField, gbc);
+		dateFromField = new JTextField(15);
+		jPanel.add(dateFromField, gbc);
+		
+		gbc.gridx = 2;
+		gbc.gridy = 2;
+		jPanel.add(new JLabel("To Date (int):"), gbc);
+
+		gbc.gridx = 3;
+		gbc.gridy = 2;
+		dateToField = new JTextField(15);
+		jPanel.add(dateToField, gbc);
 
 		gbc.gridx = 0;
 		gbc.gridy = 3;
@@ -117,7 +126,8 @@ class TicketSellerGui extends JFrame {
 				try {
 					String departure = departureField.getText().trim();
 					String arrival = arrivalField.getText().trim();
-					String date = dateField.getText().trim();
+					String fromDate = dateFromField.getText().trim();
+					String toDate = dateToField.getText().trim();
 					String timeDeparture = timeDepartureField.getText().trim();
 					String timeArrival = timeArrivalField.getText().trim();
 					String seats = seatsField.getText().trim();
@@ -125,15 +135,16 @@ class TicketSellerGui extends JFrame {
 
 					departureField.setText("");
 					arrivalField.setText("");
-					dateField.setText("");
+					dateFromField.setText("");
+					dateToField.setText("");
 					timeDepartureField.setText("");
 					timeArrivalField.setText("");
 					seatsField.setText("");
 					priceField.setText("");
 
-					myAgent.addFlight(new Flight(departure, arrival, date, timeDeparture, timeArrival,
+					myAgent.addFlight(new Flight(departure, arrival, fromDate, toDate, timeDeparture, timeArrival,
 							Integer.parseInt(price), Integer.parseInt(seats)));
-					flightTableModel.addFlight(new Flight(departure, arrival, date, timeDeparture, timeArrival,
+					flightTableModel.addFlight(new Flight(departure, arrival, fromDate, toDate, timeDeparture, timeArrival,
 							Integer.parseInt(price), Integer.parseInt(seats)));
 				} catch (Exception e) {
 					JOptionPane.showMessageDialog(TicketSellerGui.this, "Invalid values. " + e.getMessage(), "Error",
@@ -190,39 +201,40 @@ class TicketSellerGui extends JFrame {
 	}
 
 	public void incrementSalesAndDecreaseSeatsForFlight(final String departure, final String arrival,
-			final String date) {
+			final String fromDate, final String toDate) {
 		java.awt.EventQueue.invokeLater(new Runnable() {
 			@Override
 			public void run() {
-				flightTableModel.incrementSalesAndDecreaseSeatsForFlight(departure, arrival, date);
+				flightTableModel.incrementSalesAndDecreaseSeatsForFlight(departure, arrival, fromDate, toDate);
 			}
 		});
 	}
 
-	public void incrementRefusalsForFlight(final String departure, final String arrival, final String date) {
+	public void incrementRefusalsForFlight(final String departure, final String arrival, final String fromDate, final String toDate) {
 		java.awt.EventQueue.invokeLater(new Runnable() {
 			@Override
 			public void run() {
-				flightTableModel.incrementRefusalsForFlight(departure, arrival, date);
+				flightTableModel.incrementRefusalsForFlight(departure, arrival, fromDate, toDate);
 			}
 		});
 	}
 
 	private static class FlightTableModel extends AbstractTableModel {
 		private static final long serialVersionUID = 1L;
-		public static final String[] COLUMN_NAMES = { "No", "Departure", "Arrival", "Date", "Time departure",
+		public static final String[] COLUMN_NAMES = { "No", "Departure", "Arrival", "From Date", "To Date", "Time departure",
 				"Time arrival", "Seats", "Price", "Sales", "Refusal" };
 		public static final int COLUMN_COUNT = COLUMN_NAMES.length;
 		public static final int NR_COLUMN = 0;
 		public static final int DEPARTURE_COLUMN = 1;
 		public static final int ARRIVAL_COLUMN = 2;
-		public static final int DATE_COLUMN = 3;
-		public static final int TIMED_COLUMN = 4;
-		public static final int TIMEA_COLUMN = 5;
-		public static final int SEATS_COLUMN = 6;
-		public static final int PRICE_COLUMN = 7;
-		public static final int SALES_COLUMN = 8;
-		public static final int REFUSALS_COLUMN = 9;
+		public static final int FROM_DATE_COLUMN = 3;
+		public static final int TO_DATE_COLUMN = 4;
+		public static final int TIMED_COLUMN = 5;
+		public static final int TIMEA_COLUMN = 6;
+		public static final int SEATS_COLUMN = 7;
+		public static final int PRICE_COLUMN = 8;
+		public static final int SALES_COLUMN = 9;
+		public static final int REFUSALS_COLUMN = 10;
 
 		private List<Flight> flights = new ArrayList();
 
@@ -251,8 +263,10 @@ class TicketSellerGui extends JFrame {
 				return flight.getDeparture();
 			case ARRIVAL_COLUMN:
 				return flight.getArrival();
-			case DATE_COLUMN:
-				return flight.getDate();
+			case FROM_DATE_COLUMN:
+				return flight.getFromDate();
+			case TO_DATE_COLUMN:
+				return flight.getToDate();
 			case TIMED_COLUMN:
 				return flight.getTimeDeparture();
 			case TIMEA_COLUMN:
@@ -275,16 +289,16 @@ class TicketSellerGui extends JFrame {
 		}
 
 		public void incrementSalesAndDecreaseSeatsForFlight(final String departure, final String arrival,
-				final String date) {
-			Flight flight = Flight.findFlight(flights, departure, arrival, date);
+				final String fromDate, final String toDate) {
+			Flight flight = Flight.findFlight(flights, departure, arrival, fromDate, toDate);
 			if (flight != null) {
 				flight.incrementSalesAndDecreaseSeats();
 				fireTableDataChanged();
 			}
 		}
 
-		public void incrementRefusalsForFlight(final String departure, final String arrival, final String date) {
-			Flight flight = Flight.findFlight(flights, departure, arrival, date);
+		public void incrementRefusalsForFlight(final String departure, final String arrival, final String fromDate, final String toDate) {
+			Flight flight = Flight.findFlight(flights, departure, arrival, fromDate, toDate);
 			if (flight != null) {
 				flight.incrementRefusals();
 				fireTableDataChanged();

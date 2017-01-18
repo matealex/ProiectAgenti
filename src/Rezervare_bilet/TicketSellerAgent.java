@@ -83,8 +83,9 @@ public class TicketSellerAgent extends Agent {
 				String parts[] = message.split(":");
 				String departure = parts[0];
 				String arrival = parts[1];
-				String date = parts[2];
-				Flight flight = Flight.findFlight(flights, departure, arrival, date);
+				String fromDate = parts[2];
+				String toDate = parts[3];
+				Flight flight = Flight.findFlight(flights, departure, arrival, fromDate, toDate);
 				ACLMessage reply = msg.createReply();
 
 				if (flight != null) {
@@ -121,12 +122,13 @@ public class TicketSellerAgent extends Agent {
 				String parts[] = message.split(":");
 				String departure = parts[0];
 				String arrival = parts[1];
-				String date = parts[2];
-				Flight flight = Flight.findFlight(flights, departure, arrival, date);
+				String fromDate = parts[2];
+				String toDate = parts[3];
+				Flight flight = Flight.findFlight(flights, departure, arrival, fromDate, toDate);
 				if (flight != null) {
 					flight.incrementRefusals();
 					myGui.incrementRefusalsForFlight(flight.getDeparture(), flight.getArrival(),
-							flight.getDate().toString());
+							flight.getFromDate(), flight.getToDate());
 				}
 			} else {
 				block();
@@ -146,8 +148,9 @@ public class TicketSellerAgent extends Agent {
 				String parts[] = message.split(":");
 				String departure = parts[0];
 				String arrival = parts[1];
-				String date = parts[2];
-				Flight flight = Flight.findFlight(flights, departure, arrival, date);
+				String fromDate = parts[2];
+				String toDate = parts[3];
+				Flight flight = Flight.findFlight(flights, departure, arrival, fromDate, toDate);
 				ACLMessage reply = msg.createReply();
 
 				if (flight != null) {
@@ -158,7 +161,7 @@ public class TicketSellerAgent extends Agent {
 						clients.get(aid).incrementAndGet();
 					flight.incrementSalesAndDecreaseSeats();
 					myGui.incrementSalesAndDecreaseSeatsForFlight(flight.getDeparture(), flight.getArrival(),
-							flight.getDate().toString());
+							flight.getFromDate(), flight.getToDate());
 					reply.setPerformative(ACLMessage.INFORM);
 				} else {
 					reply.setPerformative(ACLMessage.FAILURE);

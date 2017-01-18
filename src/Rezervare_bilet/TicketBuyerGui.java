@@ -45,7 +45,8 @@ public class TicketBuyerGui extends JFrame {
 		JPanel jPanel = new JPanel(new GridBagLayout());
 		final JTextField departureField = new JTextField(20);
 		final JTextField arrivalField = new JTextField(20);
-		final JTextField dateField = new JTextField(20);
+		final JTextField dateFromField = new JTextField(20);
+		final JTextField dateToField = new JTextField(20);
 
 		jPanel.add(new JLabel("Departure:"));
 		jPanel.add(departureField);
@@ -53,8 +54,11 @@ public class TicketBuyerGui extends JFrame {
 		jPanel.add(new JLabel("Arrival:"));
 		jPanel.add(arrivalField);
 
-		jPanel.add(new JLabel("Date:"));
-		jPanel.add(dateField);
+		jPanel.add(new JLabel("Date From (int):"));
+		jPanel.add(dateFromField);
+		
+		jPanel.add(new JLabel("Date To (int):"));
+		jPanel.add(dateToField);
 
 		/*
 		 * gbc.gridx = 0; gbc.gridy = 3; gbc.gridwidth = 2; gbc.fill =
@@ -72,7 +76,7 @@ public class TicketBuyerGui extends JFrame {
 				sellerJCheckBoxes.clear();
 				sellerJLabels.clear();
 				pack();
-				myAgent.startCFP(departureField.getText(), arrivalField.getText(), dateField.getText());
+				myAgent.startCFP(departureField.getText(), arrivalField.getText(), dateFromField.getText(), dateToField.getText());
 			}
 		});
 		jPanel.add(jButtonSearch);

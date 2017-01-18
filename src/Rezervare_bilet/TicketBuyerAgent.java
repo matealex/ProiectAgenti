@@ -22,7 +22,8 @@ public class TicketBuyerAgent extends Agent {
 	private static final long serialVersionUID = 1L;
 	private String targetDeparture;
 	private String targetArrival;
-	private String targetDate;
+	private String targetFromDate;
+	private String targetToDate;
 	private AID[] sellerAgents;
 	private Map<String, Boolean> accepted;
 	private boolean finished;
@@ -51,7 +52,7 @@ public class TicketBuyerAgent extends Agent {
 	}
 
 	// click on search => CFP = call for proposal - cererea de oferte
-	public void startCFP(final String searchDeparture, final String searchArrival, final String searchDate) {
+	public void startCFP(final String searchDeparture, final String searchArrival, final String searchFromDate, final String searchToDate) {
 		addBehaviour(new OneShotBehaviour() {
 			private static final long serialVersionUID = 1L;
 
@@ -59,7 +60,8 @@ public class TicketBuyerAgent extends Agent {
 			public void action() {
 				targetDeparture = searchDeparture;
 				targetArrival = searchArrival;
-				targetDate = searchDate;
+				targetFromDate = searchFromDate;
+				targetToDate = searchToDate;
 				accepted = new HashMap();
 				proposals = new ArrayList();
 				prices = new ArrayList();
@@ -99,7 +101,7 @@ public class TicketBuyerAgent extends Agent {
 		private int countResults = 0;
 
 		public void action() {
-			String searchAll = targetDeparture + ":" + targetArrival + ":" + targetDate;
+			String searchAll = targetDeparture + ":" + targetArrival + ":" + targetFromDate + ":" + targetToDate;
 			switch (step) {
 			// cere ofertele de la toti seller agents (companii)
 			case 0:

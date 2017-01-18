@@ -11,7 +11,8 @@ public class Flight {
 	
 	private String departure;
 	private String arrival;
-	private String date;
+	private String fromDate;
+	private String toDate;
 	private String timeDeparture;
 	private String timeArrival;
 	private int price;
@@ -19,13 +20,14 @@ public class Flight {
 	private int sales;
 	private int refusals;
 
-	public Flight(String departure, String arrival, String date, String timeDeparture, String timeArrival, int price,
+	public Flight(String departure, String arrival, String fromDate, String toDate, String timeDeparture, String timeArrival, int price,
 			int nrSeats) {
 		this.departure = departure;
 		this.arrival = arrival;
 		this.timeDeparture = timeDeparture;
 		this.timeArrival = timeArrival;
-		this.date = date;
+		this.fromDate = fromDate;
+		this.toDate = toDate;
 		this.price = price;
 		this.nrSeats = nrSeats;
 		sales = 0;
@@ -39,18 +41,13 @@ public class Flight {
 	public String getArrival() {
 		return arrival;
 	}
-
-	public Date getDate() {
-		Date date_format = new Date();
-
-		try {
-			DateFormat format = new SimpleDateFormat("DD-MM-YYYY", Locale.ENGLISH);
-			date_format = format.parse(date);
-		}
-		catch (ParseException e) {
-		}
-
-		return date_format;
+	
+	public String getFromDate() {
+		return fromDate;
+	}
+	
+	public String getToDate() {
+		return toDate;
 	}
 
 	public String getTimeDeparture() {
@@ -86,26 +83,20 @@ public class Flight {
 		refusals++;
 	}
 
-	public static Flight findFlight(Collection<Flight> flights, String departure, String arrival, String date) {
-		Date date_gui = new Date();
-
-		try {
-			DateFormat format = new SimpleDateFormat("DD-MM-YYYY", Locale.ENGLISH);
-			date_gui = format.parse(date);
-		}
-		catch (ParseException e) {
-		}
-
-		System.out.println(date);
+	public static Flight findFlight(Collection<Flight> flights, String departure, String arrival, String fromDate, String toDate) {
+		System.out.println(fromDate + "->" + toDate);
 		for (Flight flight : flights)
 			if (flight.nrSeats > 0) {
 				if (flight.departure.equals(departure))
-					if (flight.arrival.equals(arrival)) {
-						int to = flight.getDate().getDay() - 3;
-						int from = flight.getDate().getDay() + 3;
-						Date date_gui1 = null;
-						if (flight.date.equals(date) || (to <= date_gui1.getDay() && from >= date_gui1.getDay()))
+					if (flight.arrival.equals(arrival)) {						
+						int from = Integer.parseInt(fromDate) - 3;
+						int to = Integer.parseInt(toDate) + 3;
+						int flightFrom = Integer.parseInt(flight.fromDate);
+						int flightTo = Integer.parseInt(flight.toDate);
+						
+						if (from <= flightFrom && to >= flightTo) {
 							return flight;
+						}
 					}
 			}
 
