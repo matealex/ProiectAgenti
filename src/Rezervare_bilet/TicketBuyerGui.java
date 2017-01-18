@@ -174,7 +174,23 @@ public class TicketBuyerGui extends JFrame {
 	}
 
 	public void addProposalHotel(String localName, int price) {
-		// TODO Auto-generated method stub
+		java.awt.EventQueue.invokeLater(new Runnable() {
+			@Override
+			public void run() {
+				System.out.println("found a hotel:" + localName + "with price:" + price);
+				sellerNames.add(localName);
+				sellerPrices.add(price);
+				jPanelProposals.add(new JLabel(localName));
+				jPanelProposals.add(new JLabel(Integer.toString(price)));
+				JCheckBox jCheckBox = new JCheckBox();
+				sellerJCheckBoxes.add(jCheckBox);
+				jPanelProposals.add(jCheckBox);
+				JLabel jLabel = new JLabel();
+				sellerJLabels.add(jLabel);
+				jPanelProposals.add(jLabel);
+				pack();
+			}
+		});
 		
 	}
 }
