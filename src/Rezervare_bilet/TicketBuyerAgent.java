@@ -24,11 +24,19 @@ public class TicketBuyerAgent extends Agent {
 	private String targetArrival;
 	private String targetFromDate;
 	private String targetToDate;
-	private AID[] sellerAgents;
+
+	private AID[] ticketSellerAgents;
+	private AID[] hotelSelletAgents;
+
 	private Map<String, Boolean> accepted;
+
 	private boolean finished;
+
 	private List<AID> proposals;
+	private List<AID> proposalsHotels;
 	private List<Integer> prices;
+	private List<Integer> pricesHotels;
+
 	private TicketBuyerGui myGui;
 
 	protected void setup() {
@@ -52,7 +60,8 @@ public class TicketBuyerAgent extends Agent {
 	}
 
 	// click on search => CFP = call for proposal - cererea de oferte
-	public void startCFP(final String searchDeparture, final String searchArrival, final String searchFromDate, final String searchToDate) {
+	public void startCFP(final String searchDeparture, final String searchArrival, final String searchFromDate,
+			final String searchToDate) {
 		addBehaviour(new OneShotBehaviour() {
 			private static final long serialVersionUID = 1L;
 
@@ -64,18 +73,36 @@ public class TicketBuyerAgent extends Agent {
 				targetToDate = searchToDate;
 				accepted = new HashMap();
 				proposals = new ArrayList();
+				proposalsHotels = new ArrayList();
 				prices = new ArrayList();
+				pricesHotels = new ArrayList();
 				finished = false;
 
+				////
 				DFAgentDescription template = new DFAgentDescription();
 				ServiceDescription sd = new ServiceDescription();
 				sd.setType("Ticket-selling");
 				template.addServices(sd);
 				try {
 					DFAgentDescription[] result = DFService.search(myAgent, template);
-					sellerAgents = new AID[result.length];
+					ticketSellerAgents = new AID[result.length];
 					for (int i = 0; i < result.length; ++i) {
-						sellerAgents[i] = result[i].getName();
+						ticketSellerAgents[i] = result[i].getName();
+					}
+				} catch (FIPAException fe) {
+					fe.printStackTrace();
+				}
+
+				//////
+				template = new DFAgentDescription();
+				sd = new ServiceDescription();
+				sd.setType("Hotel-selling");
+				template.addServices(sd);
+				try {
+					DFAgentDescription[] result = DFService.search(myAgent, template);
+					hotelSelletAgents = new AID[result.length];
+					for (int i = 0; i < result.length; ++i) {
+						hotelSelletAgents[i] = result[i].getName();
 					}
 				} catch (FIPAException fe) {
 					fe.printStackTrace();
@@ -96,18 +123,22 @@ public class TicketBuyerAgent extends Agent {
 		private static final long serialVersionUID = 1L;
 		private int repliesCnt = 0; // The counter of replies from seller agents
 		private MessageTemplate mt; // The template to receive replies
+		private MessageTemplate mtHotels; // The template to receive replies
 		private int step = 0;
 		private int accCount = 0;
 		private int countResults = 0;
 
 		public void action() {
 			String searchAll = targetDeparture + ":" + targetArrival + ":" + targetFromDate + ":" + targetToDate;
+
+			int nrStele = 10;
+			int nrPersoaneCamera = 10;
 			switch (step) {
 			// cere ofertele de la toti seller agents (companii)
 			case 0:
 				ACLMessage cfp = new ACLMessage(ACLMessage.CFP);
-				for (int i = 0; i < sellerAgents.length; ++i) {
-					cfp.addReceiver(sellerAgents[i]);
+				for (int i = 0; i < ticketSellerAgents.length; ++i) {
+					cfp.addReceiver(ticketSellerAgents[i]);
 				}
 				cfp.setContent(searchAll);
 				cfp.setConversationId("Ticket-trade");
@@ -116,23 +147,59 @@ public class TicketBuyerAgent extends Agent {
 				myAgent.send(cfp);
 				mt = MessageTemplate.and(MessageTemplate.MatchConversationId("Ticket-trade"),
 						MessageTemplate.MatchInReplyTo(cfp.getReplyWith()));
+
+				cfp = new ACLMessage(ACLMessage.CFP);
+				for (int i = 0; i < hotelSelletAgents.length; ++i) {
+					cfp.addReceiver(hotelSelletAgents[i]);
+				}
+				cfp.setContent(nrStele + ":" + nrPersoaneCamera);
+				cfp.setConversationId("Hotel-trade");
+				cfp.setReplyWith("cfp" + System.currentTimeMillis()); // Unique
+																		// value
+				myAgent.send(cfp);
+				mtHotels = MessageTemplate.and(MessageTemplate.MatchConversationId("Hotel-trade"),
+						MessageTemplate.MatchInReplyTo(cfp.getReplyWith()));
+
 				step = 1;
+
 				break;
 			// se primesc ofertele companiilor (cele care propun oferte)
 			case 1:
 				ACLMessage reply = myAgent.receive(mt);
+				ACLMessage replyHotels = myAgent.receive(mtHotels);
+
+				if (replyHotels != null) {
+					if (replyHotels.getPerformative() == ACLMessage.PROPOSE) {
+						int price = Integer.parseInt(replyHotels.getContent());
+						proposalsHotels.add(replyHotels.getSender());// lista de
+						// hoteluri
+						pricesHotels.add(price);
+						myGui.addProposalHotel(replyHotels.getSender().getLocalName(), price);
+					}
+					repliesCnt++;
+					if (repliesCnt >= ticketSellerAgents.length + hotelSelletAgents.length) {
+						step = 2;
+						myGui.endProposals();
+						if (proposals.size() == 0 || proposalsHotels.size() == 0) {
+							step = 4;
+							return;
+						}
+					}
+				}
+
 				if (reply != null) {
 					if (reply.getPerformative() == ACLMessage.PROPOSE) {
 						int price = Integer.parseInt(reply.getContent());
-						proposals.add(reply.getSender());// lista de companii
+						proposals.add(reply.getSender());// lista de
+															// companii
 						prices.add(price);
 						myGui.addProposal(reply.getSender().getLocalName(), price);
 					}
 					repliesCnt++;
-					if (repliesCnt >= sellerAgents.length) {
+					if (repliesCnt >= ticketSellerAgents.length + hotelSelletAgents.length) {
 						step = 2;
 						myGui.endProposals();
-						if (proposals.size() == 0) {
+						if (proposals.size() == 0 || proposalsHotels.size() == 0) {
 							step = 4;
 							return;
 						}

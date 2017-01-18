@@ -172,4 +172,9 @@ public class TicketBuyerGui extends JFrame {
 			}
 		});
 	}
+
+	public void addProposalHotel(String localName, int price) {
+		// TODO Auto-generated method stub
+		
+	}
 }
